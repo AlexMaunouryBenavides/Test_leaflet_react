@@ -25,6 +25,7 @@ function Map() {
 			zoom: 6,
 			center: location,
 			minZoom: 3.5,
+			maxZoom: 14,
 		}),
 		[location]
 	);
