@@ -213,7 +213,7 @@ function Map() {
 
 			<div className="absolute z-10 bottom-[2vh] left-[1vw] ">
 				<span className="absolute top-0 left-0 mt-1 ml-1 h-full w-full rounded bg-black"></span>
-				<span className="fold-bold relative inline-block h-[80px] w-[400px] rounded border-2 border-black bg-blue-400 font-bold ">
+				<span className="fold-bold relative inline-block h-[80px] w-[250px] rounded border-2 border-black bg-blue-400   text-[14px] md-w[400px] md:font-bold ">
 					Legend :{displayCrime ? <LegendCrime /> : displayCost ? <LegendCost /> : null}
 				</span>
 			</div>
