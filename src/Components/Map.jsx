@@ -4,6 +4,7 @@ import L, { popup } from 'leaflet';
 import 'leaflet.vectorgrid';
 import IconMarker from '../Data/avion.png';
 import getColor from '../Fonctions/GetCrimeColor';
+import getCost from '../Fonctions/GetColColor';
 import data from '../Data/output.json';
 import Unesco from '../Data/unesco.json';
 import Loading from '../Components/Loading';
@@ -11,6 +12,7 @@ import Loading from '../Components/Loading';
 function Map() {
 	const mapContainer = useRef();
 	const [displayCrime, setDisplayCrime] = useState(false);
+	const [displayCost, setDisplayCost] = useState(false);
 	const [displayUnesco, setDisplayUnesco] = useState(false);
 	const [location, setLocation] = useState([48.85341, 2.3488]);
 	const [loading, setLoading] = useState(false);
@@ -20,7 +22,7 @@ function Map() {
 			attributionControl: false,
 			zoom: 6,
 			center: location,
-			minZoom: 4,
+			minZoom: 3.5,
 		}),
 		[location]
 	);
@@ -49,6 +51,28 @@ function Map() {
 		}
 		return null;
 	}, [displayCrime]);
+	const costOfLivingLayer = useMemo(() => {
+		if (displayCost) {
+			return L.vectorGrid.slicer(data, {
+				vectorTileLayerStyles: {
+					sliced: function (properties) {
+						const costOfLiving = properties.COL;
+						const fillColor = getCost(costOfLiving);
+						return {
+							fillColor: fillColor,
+							fill: true,
+							fillOpacity: 0.5,
+							stroke: true,
+							weight: 1,
+							opacity: 0.2,
+							color: '#000',
+						};
+					},
+				},
+				rendererFactory: L.svg.tile,
+			});
+		}
+	});
 
 	/* marker */
 	function getIcon() {
@@ -59,9 +83,14 @@ function Map() {
 	}
 	function handleToggleCrime() {
 		setDisplayCrime(!displayCrime);
+		setDisplayCost(false);
 	}
 	function handleToggleUnesco() {
 		setDisplayUnesco(!displayUnesco);
+	}
+	function handleCost() {
+		setDisplayCost(!displayCost);
+		setDisplayCrime(false);
 	}
 
 	/* onclick coordoner aleatoire */
@@ -105,6 +134,9 @@ function Map() {
 		if (crimeLayer) {
 			crimeLayer.addTo(map);
 		}
+		if (costOfLivingLayer) {
+			costOfLivingLayer.addTo(map);
+		}
 
 		/* Toogle affichage lieux unesco. nessecite leaflet version 1.2 */
 		let unescoLayer;
@@ -144,7 +176,7 @@ function Map() {
 		}
 
 		return () => map.remove();
-	}, [location, mapConfig, crimeLayer, displayUnesco]);
+	}, [location, mapConfig, crimeLayer, displayUnesco, displayCost]);
 
 	return (
 		<>
@@ -165,6 +197,12 @@ function Map() {
 					<span className="absolute top-0 left-0 mt-1 ml-1 h-full w-full rounded bg-black"></span>
 					<span className="fold-bold relative inline-block h-full w-full rounded border-2 border-black bg-white px-3 py-1 text-base font-bold text-black transition duration-100 hover:bg-blue-400 hover:text-gray-900 dark:bg-transparent">
 						Unesco
+					</span>
+				</button>
+				<button className=" relative text-blue-950" onClick={handleCost}>
+					<span className="absolute top-0 left-0 mt-1 ml-1 h-full w-full rounded bg-black"></span>
+					<span className="fold-bold relative inline-block h-full w-full rounded border-2 border-black bg-white px-3 py-1 text-base font-bold text-black transition duration-100 hover:bg-blue-400 hover:text-gray-900 dark:bg-transparent">
+						Cout de la vie
 					</span>
 				</button>
 			</nav>
