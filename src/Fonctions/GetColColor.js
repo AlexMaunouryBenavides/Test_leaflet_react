@@ -33,7 +33,7 @@ function getCost(col) {
             return color
         }
     }
-    return '#FFF'
+    return '#C1BDB3'
 }
 
 export default getCost

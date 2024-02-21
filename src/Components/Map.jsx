@@ -8,6 +8,8 @@ import getCost from '../Fonctions/GetColColor';
 import data from '../Data/output.json';
 import Unesco from '../Data/unesco.json';
 import Loading from '../Components/Loading';
+import LegendCrime from '../Fonctions/LegendCrime';
+import LegendCost from '../Fonctions/LegendCost';
 
 function Map() {
 	const mapContainer = useRef();
@@ -207,6 +209,13 @@ function Map() {
 				</button>
 			</nav>
 			{loading && <Loading />}
+
+			<div className="absolute z-10 bottom-[2vh] left-[1vw] ">
+				<span className="absolute top-0 left-0 mt-1 ml-1 h-full w-full rounded bg-black"></span>
+				<span className="fold-bold relative inline-block h-[80px] w-[400px] rounded border-2 border-black bg-blue-400 font-bold ">
+					Legend :{displayCrime ? <LegendCrime /> : displayCost ? <LegendCost /> : null}
+				</span>
+			</div>
 
 			<div style={{ padding: 0, margin: 0, width: '100vw', height: '100vh' }} ref={mapContainer}></div>
 		</>
